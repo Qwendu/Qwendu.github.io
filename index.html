@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<head>
 <script>
 
 async function include(html_path) {
@@ -7,18 +9,31 @@ async function include(html_path) {
 	s += "Loaded " + url_to_request + "\n";
 	s += text;
 	s += "</div><hr>\n";
-	document.write(s);
+
+	var div = document.createElement("div");
+	div.innerHTML = s;
+	document.getElementById("projects").appendChild(div);
+	return s;
 }
 
 </script>
+</head>
+<body>
 <h1>
 Qwendo's Doodles
 </h1>
+<div id="projects">
 <script>
 	var projects = [
 		"projects/dual_h_bridge_stepper_driver.html",
 		"projects/cycloidal_gear.html",
-	].map(include);
-	Promise.all(projects);
+	].map((a) => {
+		Promise.resolve(a)
+		.then(async (a) => {
+			var s = await include(a);
+		})
+	});
 </script>
 </div>
+</div>
+</body>
