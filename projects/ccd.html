@@ -1,0 +1,101 @@
+<h1>Continous Collision Detection Part1 1: Translations in 2D</h1>
+<style>
+img {width:50em}
+</style>
+<h2>The Problem</h2>
+Resolve collisions between two moving Objects such that
+<ul>
+<li>There are no overlaps between objects at any point</li>
+<li>Corollary: There is no tunneling if two objects that should collide move too fast</li>
+<li>Return a collision time for when the earliest collision is happening</li>
+<li>Return collision points for both shapes</li>
+</ul>
+for Collision Meshes made up of Triangles.
+
+<h2>Translational movement in 2D</h2>
+Given
+<ul>
+<li>Center Of Mass</li>
+<li>Velocity</li>
+<li>A triangle (A,B,C) given in Counter Clock wise order</li>
+</ul>
+find the first intersection time t, if there is an intersection.
+<br>
+<img src="./ccd/what_we_want.png"></img>
+<br>
+In the above picture Object A is on the left and moving to the
+right, and object B is on the right and moving towards the left.
+The blue triangles above the Center of Masses are the respective
+collision shapes.
+The purple lines represent the colliding lines at time t col.
+
+How do we get the collision time?
+<h3>Continous Line Point intersection test</h3>
+Let's consider a simpler example,
+just a line and a point moving relative to each other.
+<br><img src="./ccd/line_point_collision.png"></img><br>
+The line is defined by L,M and the point is N.
+L,M are moving towards the right with Avel, and N is moving towards the left with Bvel.
+
+The first insight is that for the point to collide with the line-segment
+defined by L,M
+it has to be on the line defined by the two points.
+
+<br><img src="./ccd/line_point_collision_example.png"></img><br>
+This means that the distance d above needs to be 0.
+<br>
+What is <math>d(t)</math> and can we find its roots?
+
+Given the line equation, which tells us when a point is on the line
+<math>
+	ax + by = c
+</math>
+replace <math>a,b</math> with the values derived from the points L and M.
+Where a and b are the x,y compoenents of the lines normal vector.
+<math>(a,b) = (-(M'.y - L'.y), M'.x - L'.x)</math><br>
+Then c is given by <math>dot(L',(a,b))</math>.<br>
+Where M',L',N' are depending on t:<br>
+<math>L' = L + Avel * t</math><br>
+<math>M' = M + Avel * t</math><br>
+<math>N' = N + Bvel * t</math><br>
+Now solving for T is possible:<br>
+<math>-(M'(t).y - L'(t).y)* N'(t).x + (M'(t).x - L'(t).x)*N'(t).y - (-(M'(t).y - L'(t).y)*L'(t).x + (M'(t).x - L'(t).x)*L'(t).y) = 0</math><br>
+The Terms subtracting L from M folds down
+<math>M'(t) - L'(t) = M + Avel * t - L - Avel * t = M - L</math><br>
+<math>-(M'(t).y - L'(t).y)* N'(t).x + (M'(t).x - L'(t).x)*N'(t).y - (-(M'(t).y - L'(t).y)*L'(t).x + (M'(t).x - L'(t).x)*L'(t).y) = 0</math><br>
+<math>-(M.y - L.y)* (N.x + Bvel.x * t) + (M.x - L.x)*(N.y + Bvel.y * t) - (-(M.y - L.y)*(L.x + Avel.x * t) + (M.x - L.x)*(L.y + Avel.y * t)) = 0</math><br>
+<math>-(M.y - L.y)* (N.x + Bvel.x * t) + (M.x - L.x)*(N.y + Bvel.y * t) - (-(M.y - L.y)*(L.x + Avel.x * t) + (M.x - L.x)*(L.y + Avel.y * t)) = 0</math><br>
+Condense notation <math>(a,b) = (-(M.y - L.y), (M.x - L.x))</math><br>
+<math>-(M.y - L.y)* (N.x + Bvel.x * t) + (M.x - L.x)*(N.y + Bvel.y * t) - (-(M.y - L.y)*(L.x + Avel.x * t) + (M.x - L.x)*(L.y + Avel.y * t)) = 0</math><br>
+We arrive at the linear equation of:
+<math>
+0
++ a * N.x 
++ b * N.y
+- a * L.x
+- b * L.y
++ t * (
++ a * (Bvel.x - Avel.x)
++ b * (Bvel.y - Avel.y)
+)
+= 0
+</math><br>
+Solving for t is now easy.
+<math>
+dot((a,b), N) - dot((a,b),L) + dot((a,b), Bvel - Avel) * t = 0
+</math><br>
+<math>
+dot((a,b), Bvel - Avel) * t = dot((a,b), N) + dot((a,b),L)
+</math><br>
+<math>
+t = (dot((a,b), N) + dot((a,b),L))/dot((a,b), Bvel - Avel)
+</math><br>
+
+If 0 <= t there will be an actual collision in the future, but
+with the plane.
+<img src="./ccd/plane_point_no_collide.png"></img><br>
+At this time t, the point N will be at N'(t).
+For the the collision to be actually valid, the point needs to be on the line segment of L'M'.
+So <math>0 <= dot(N'-L',M'-L') <= dot(M'-L',M'-L')</math>
+
+
