@@ -6,7 +6,6 @@ async function include(html_path) {
 	url_to_request = window.location.origin + "/" + html_path;
 	text = await fetch(url_to_request).then((request) => request.text());
 	s = "<div>\n";
-	s += "Loaded " + url_to_request + "\n";
 	s += text;
 	s += "</div><hr>\n";
 
