@@ -21,7 +21,7 @@ Given
 </ul>
 find the first intersection time t, if there is an intersection.
 <br>
-<img src="./ccd/what_we_want.png"></img>
+<img src="projects/ccd/what_we_want.png"></img>
 <br>
 In the above picture Object A is on the left and moving to the
 right, and object B is on the right and moving towards the left.
@@ -33,7 +33,7 @@ How do we get the collision time?
 <h3>Continous Line Point intersection test</h3>
 Let's consider a simpler example,
 just a line and a point moving relative to each other.
-<br><img src="./ccd/line_point_collision.png"></img><br>
+<br><img src="projects/ccd/line_point_collision.png"></img><br>
 The line is defined by L,M and the point is N.
 L,M are moving towards the right with Avel, and N is moving towards the left with Bvel.
 
@@ -41,7 +41,7 @@ The first insight is that for the point to collide with the line-segment
 defined by L,M
 it has to be on the line defined by the two points.
 
-<br><img src="./ccd/line_point_collision_example.png"></img><br>
+<br><img src="projects/ccd/line_point_collision_example.png"></img><br>
 This means that the distance d above needs to be 0.
 <br>
 What is <math>d(t)</math> and can we find its roots?
@@ -93,7 +93,7 @@ t = (dot((a,b), N) + dot((a,b),L))/dot((a,b), Bvel - Avel)
 
 If 0 <= t there will be an actual collision in the future, but
 with the plane.
-<img src="./ccd/plane_point_no_collide.png"></img><br>
+<img src="projects/ccd/plane_point_no_collide.png"></img><br>
 At this time t, the point N will be at N'(t).
 For the the collision to be actually valid, the point needs to be on the line segment of L'M'.
 So <math>0 <= dot(N'-L',M'-L') <= dot(M'-L',M'-L')</math>
